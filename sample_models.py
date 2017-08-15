@@ -120,11 +120,12 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     input_data = Input(name='the_input', shape=(None, input_dim))
     # TODO: Add bidirectional recurrent layer
     simp_rnn = GRU(units, activation='relu',
-        return_sequences=True, implementation=2, name='rnn')(input_data)
-    bn_rnn = BatchNormalization(name="bnn")(simp_rnn)
-    bidir_rnn = Bidirectional()(bn_rnn)
+        return_sequences=True, implementation=2, name='rnn')
+    bidir_rnn = Bidirectional(simp_rnn)(input_data)
+    bn_rnn = BatchNormalization(name="bnn")(bidir_rnn)
+    
     # TODO: Add a TimeDistributed(Dense(output_dim)) layer
-    time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
+    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
     # Add softmax activation layer
     y_pred = Activation('softmax', name='softmax')(time_dense)
     # Specify the model
@@ -152,15 +153,13 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
     # create recurrent layers
     layers_rnn = concatenated
     for i in range(0,recur_layers):
-        layers_rnn = GRU(units, activation="relu",
-            return_sequences=True, implementation=2, name="rnn_{}".format(i))(layers_rnn)
+        # add bidrectional layers 
+        layers_rnn = Bidirectional(GRU(units, activation="relu",
+            return_sequences=True, implementation=2, name="rnn_{}".format(i)))(layers_rnn)
         layers_rnn = BatchNormalization(name="bnn_{}".format(i))(layers_rnn)
-     
-    # add bidrectional layers 
-    bidir_rnn = Bidirectional(layers_rnn,name="bidirnn")
-    
+ 
     # add time distributed layer 
-    time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
+    time_dense = TimeDistributed(Dense(output_dim))(layers_rnn)
     ...
     # TODO: Add softmax activation layer
     y_pred = Activation('softmax', name='softmax')(time_dense)
