@@ -141,7 +141,7 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
     """
     # Main acoustic input
     input_data = Input(name='the_input', shape=(None, input_dim))
-    input_data_  = keras.layers.Dense(units, activation='relu')(input_data)
+  
     # TODO: Specify the layers in your network
     conv_1d = Conv1D(filters, kernel_size,
                      strides=conv_stride,
@@ -150,7 +150,7 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
                      name='conv1d')(input_data)
     
     # contatenate features with derived features from convolution
-    concatenated = keras.layers.concatenate([input_data_, conv_1d], axis=1)
+    concatenated = keras.layers.concatenate([input_data, conv_1d], axis=-1)
     
     # create recurrent layers
     layers_rnn = concatenated
