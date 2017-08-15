@@ -122,7 +122,7 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     simp_rnn = SimpleRNN(units, activation='relu',
         return_sequences=True, implementation=2, name='rnn')(input_data)
     bn_rnn = BatchNormalization(name="bnn")(simp_rnn)
-    bidir_rnn = Bidirectional(name="bidirnn")(bn_rnn)
+    bidir_rnn = Bidirectional(bn_rnn,name="bidirnn")
     # TODO: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
     # Add softmax activation layer
@@ -157,7 +157,7 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
         layers_rnn = BatchNormalization(name="bnn_{}".format(i))(layers_rnn)
      
     # add bidrectional layers 
-    bidir_rnn = Bidirectional(name="bidirnn")(layers_rnn)
+    bidir_rnn = Bidirectional(layers_rnn,name="bidirnn")
     
     # add time distributed layer 
     time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
