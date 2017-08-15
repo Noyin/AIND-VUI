@@ -150,7 +150,7 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
                      name='conv1d')(input_layer)
     
     # contatenate features with derived features from convolution
-    concatenated = keras.layers.concatenate([input_layer, conv_1d], axis=2)
+    concatenated = keras.layers.concatenate([input_layer, conv_1d], axis=1)
     
     # create recurrent layers
     layers_rnn = concatenated
