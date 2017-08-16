@@ -157,7 +157,7 @@ def final_model(input_dim, filters, kernel_size, conv_stride,
     for i in range(0,recur_layers):
         # add bidrectional layers 
         layers_rnn = Bidirectional(GRU(units, activation="relu",
-            return_sequences=True, implementation=2, name="rnn_{}".format(i)))(layers_rnn)
+            return_sequences=True, implementation=2, name="rnn_{}".format(i),dropout_W=0.2, dropout_U=0.2))(layers_rnn)
         layers_rnn = BatchNormalization(name="bnn_{}".format(i))(layers_rnn)
  
     # add time distributed layer 
